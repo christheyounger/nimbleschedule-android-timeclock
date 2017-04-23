@@ -6,6 +6,22 @@
     android:layout_height="match_parent"
     tools:context="com.youngaustralia.nimblescheduletimeclock.MainActivity">
 
+    <Button
+        android:id="@+id/button_clockout"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorAccent"
+        android:onClick="clockOut"
+        android:text="@string/btn_clockout"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_isactive" />
+
     <TextView
         android:id="@+id/label_timeclockid"
         android:layout_width="wrap_content"
@@ -73,5 +89,21 @@
         android:layout_marginLeft="16dp"
         android:text="TextView"
         app:layout_constraintLeft_toLeftOf="parent"
-        tools:layout_editor_absoluteY="142dp" />
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_isactive" />
+
+    <Button
+        android:id="@+id/button_clockin"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPrimary"
+        android:onClick="clockIn"
+        android:text="@string/btn_clockin"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_isactive" />
 </android.support.constraint.ConstraintLayout>

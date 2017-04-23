@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -35,7 +37,11 @@ public class MainActivity extends AppCompatActivity {
         final TextView mtimeClockId = (TextView) findViewById(R.id.txt_timeclockid);
         final TextView mStartAt = (TextView) findViewById(R.id.txt_startedat);
         final TextView mIsActive = (TextView) findViewById(R.id.txt_isactive);
+        final Button mClockIn = (Button) findViewById(R.id.button_clockin);
+        final Button mClockOut = (Button) findViewById(R.id.button_clockout);
         mErrorView.setVisibility(TextView.INVISIBLE);
+        mClockIn.setVisibility(Button.INVISIBLE);
+        mClockOut.setVisibility(Button.INVISIBLE);
 
         String url = "https://app.nimbleschedule.com/api/TimeClocks/GetClockInState?format=json&username="+username+"&password="+password;
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
@@ -48,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
                         mtimeClockId.setText(responseJSON.getString("TimeClockId"));
                         mStartAt.setText(responseJSON.getString("StartAt"));
                         mIsActive.setText(responseJSON.getString("IsActive"));
+                        if (responseJSON.getBoolean("IsActive")) {
+                            mClockOut.setVisibility(Button.VISIBLE);
+                        } else {
+                            mClockIn.setVisibility(Button.VISIBLE);
+                        }
                     } catch (JSONException e) {
                         // ¯\_(ツ)_/¯
                         mErrorView.setVisibility(TextView.VISIBLE);
@@ -66,5 +77,18 @@ public class MainActivity extends AppCompatActivity {
             mErrorView.setVisibility(TextView.VISIBLE);
             mErrorView.setText("That didn't work!");
         }
+    }
+
+    public void clockIn(View view) {
+        SharedPreferences sharedPref = this.getSharedPreferences("login", Context.MODE_PRIVATE);
+        final String username = sharedPref.getString("username", null);
+        final String password = sharedPref.getString("password", null);
+        String url = "https://app.nimbleschedule.com/api/TimeClocks/ClockIn?format=json&username="+username+"&password="+password;
+    }
+    public void clockOut(View view) {
+        SharedPreferences sharedPref = this.getSharedPreferences("login", Context.MODE_PRIVATE);
+        final String username = sharedPref.getString("username", null);
+        final String password = sharedPref.getString("password", null);
+        String url = "https://app.nimbleschedule.com/api/TimeClocks/ClockOut?format=json&username="+username+"&password="+password;
     }
 }

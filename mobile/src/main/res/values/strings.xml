@@ -16,4 +16,6 @@
     <string name="label_timeclockid">Clock ID</string>
     <string name="label_startat">Started</string>
     <string name="label_isactive">Active</string>
+    <string name="btn_clockin">Clock In</string>
+    <string name="btn_clockout">Clock Out</string>
 </resources>
