@@ -53,18 +53,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
-
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
@@ -139,9 +127,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -150,6 +135,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        final TextView mTextView = (TextView) findViewById(R.id.textView);
 
         boolean cancel = false;
         View focusView = null;
@@ -176,8 +162,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            String url = "https://app.nimbleschedule.com/api/Employees/Authenticate?format=XML&username="+email+"&password="+password;
+
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            try {
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        mTextView.setText("Response is: " + response);
+                        showProgress(false);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mTextView.setText("That didn't work!");
+                        showProgress(false);
+                    }
+                });
+                queue.add(stringRequest);
+            } catch (Exception e) {
+                mTextView.setText("That didn't work!");
+            }
         }
     }
 
@@ -269,67 +274,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-        final TextView mTextView = (TextView) findViewById(R.id.textView);
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-            String url = "https://app.nimbleschedule.com/api/Employees/Authenticate?format=XML&username="+mEmail+"&password="+mPassword;
-
-            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-            try {
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        mTextView.setText("Response is: " + response.substring(0, 500));
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mTextView.setText("That didn't work!");
-                    }
-                });
-                queue.add(stringRequest);
-            } catch (Exception e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
     }
 }
 
