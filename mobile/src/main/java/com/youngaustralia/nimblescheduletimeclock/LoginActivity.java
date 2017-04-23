@@ -3,6 +3,9 @@ package com.youngaustralia.nimblescheduletimeclock;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Debug;
 import android.support.annotation.NonNull;
@@ -133,8 +136,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
         final TextView mTextView = (TextView) findViewById(R.id.textView);
 
         boolean cancel = false;
@@ -170,7 +173,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     @Override
                     public void onResponse(String response) {
                         mTextView.setText("Response is: " + response);
+                        Context parent = getParent();
+                        SharedPreferences sharedPref = getSharedPreferences("login", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("username", email);
+                        editor.putString("password", password);
+                        editor.apply();
                         showProgress(false);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
                     }
                 }, new Response.ErrorListener() {
                     @Override

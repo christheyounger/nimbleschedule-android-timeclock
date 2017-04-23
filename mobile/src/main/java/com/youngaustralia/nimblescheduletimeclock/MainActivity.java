@@ -1,5 +1,8 @@
 package com.youngaustralia.nimblescheduletimeclock;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -20,8 +23,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final String username = "someone";
-        final String password = "test";
+
+        SharedPreferences sharedPref = this.getSharedPreferences("login", Context.MODE_PRIVATE);
+        final String username = sharedPref.getString("username", null);
+        final String password = sharedPref.getString("password", null);
+        if (username == null || password == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
         final TextView mErrorView = (TextView) findViewById(R.id.txt_error);
         final TextView mtimeClockId = (TextView) findViewById(R.id.txt_timeclockid);
         final TextView mStartAt = (TextView) findViewById(R.id.txt_startedat);
