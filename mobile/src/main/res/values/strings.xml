@@ -13,4 +13,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="label_timeclockid">Clock ID</string>
+    <string name="label_startat">Started</string>
+    <string name="label_isactive">Active</string>
 </resources>
