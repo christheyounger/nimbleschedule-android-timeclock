@@ -70,28 +70,26 @@ public class MainActivity extends AppCompatActivity {
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    mHeading.setVisibility(TextView.VISIBLE);
+                    spinner.setVisibility(Spinner.INVISIBLE);
                     try {
                         JSONObject responseJSON = new JSONObject(response);
                         timeClockId = responseJSON.getString("TimeClockId");
                         isActive = responseJSON.getBoolean("IsActive");
-                        mHeading.setVisibility(TextView.VISIBLE);
                         if (isActive) {
                             mHeading.setText(getString(R.string.label_clockedin));
                             mClockOut.setVisibility(Button.VISIBLE);
                             mStartAt.setText(responseJSON.getString("StartAt"));
                             mStartLabel.setVisibility(TextView.VISIBLE);
                             mStartAt.setVisibility(TextView.VISIBLE);
-                            spinner.setVisibility(Spinner.INVISIBLE);
                         } else {
                             mHeading.setText(getString(R.string.label_clockedout));
                             mClockIn.setVisibility(Button.VISIBLE);
-                            spinner.setVisibility(Spinner.INVISIBLE);
                         }
                     } catch (JSONException e) {
                         mHeading.setText(getString(R.string.label_error));
                         mErrorView.setVisibility(TextView.VISIBLE);
                         mErrorView.setText(response);
-                        spinner.setVisibility(Spinner.INVISIBLE);
                     }
                 }
             }, new Response.ErrorListener() {

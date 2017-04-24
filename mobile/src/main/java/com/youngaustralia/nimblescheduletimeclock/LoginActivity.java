@@ -178,16 +178,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         mTextView.setText("Response is: " + response);
                         try {
                             JSONObject responseJson = new JSONObject(response);
-                            Context parent = getParent();
-                            SharedPreferences sharedPref = getSharedPreferences("login", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPref.edit();
-                            editor.putString("username", email);
-                            editor.putString("password", password);
-                            editor.putString("id", responseJson.getString("Id"));
-                            editor.apply();
-                            showProgress(false);
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
+                            if (responseJson.getString("Email") != "null") {
+                                Context parent = getParent();
+                                SharedPreferences sharedPref = getSharedPreferences("login", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                editor.putString("username", email);
+                                editor.putString("password", password);
+                                editor.putString("id", responseJson.getString("Id"));
+                                editor.apply();
+                                showProgress(false);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                            } else {
+                                mTextView.setText("Invalid credentials");
+                                showProgress(false);
+                            }
                         } catch (JSONException e) {
                             mTextView.setText("That didn't work!" + response);
                             showProgress(false);
