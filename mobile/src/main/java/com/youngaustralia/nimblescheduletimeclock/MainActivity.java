@@ -180,7 +180,15 @@ public class MainActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    public void goToLogin(View view) {
+    public void logOut(View view) {
+        // destroy credentials
+        authStr = null;
+        SharedPreferences sharedPref = this.getSharedPreferences("login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("username", null);
+        editor.putString("password", null);
+        editor.putString("id", null);
+        editor.commit(); // save immediately
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
