@@ -18,4 +18,6 @@
     <string name="label_isactive">Active</string>
     <string name="btn_clockin">Clock In</string>
     <string name="btn_clockout">Clock Out</string>
+    <string name="btn_refresh">Refresh</string>
+    <string name="label_error">Oops! There was an error:</string>
 </resources>

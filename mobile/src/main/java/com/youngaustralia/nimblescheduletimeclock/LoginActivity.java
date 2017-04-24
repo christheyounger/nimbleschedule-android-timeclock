@@ -40,6 +40,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -173,15 +176,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     @Override
                     public void onResponse(String response) {
                         mTextView.setText("Response is: " + response);
-                        Context parent = getParent();
-                        SharedPreferences sharedPref = getSharedPreferences("login", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putString("username", email);
-                        editor.putString("password", password);
-                        editor.apply();
-                        showProgress(false);
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
+                        try {
+                            JSONObject responseJson = new JSONObject(response);
+                            Context parent = getParent();
+                            SharedPreferences sharedPref = getSharedPreferences("login", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("username", email);
+                            editor.putString("password", password);
+                            editor.putString("id", responseJson.getString("Id"));
+                            editor.apply();
+                            showProgress(false);
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                        } catch (JSONException e) {
+                            mTextView.setText("That didn't work!" + response);
+                            showProgress(false);
+                        }
                     }
                 }, new Response.ErrorListener() {
                     @Override
