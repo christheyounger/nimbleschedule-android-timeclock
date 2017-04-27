@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static String timeClockId;
     public static Boolean isActive;
     public static Date startAt;
+    public static Date endAt;
     public static String authStr;
     final DateFormat nimbleDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmz");
     final DateFormat humanDate = DateFormat.getDateTimeInstance();
@@ -57,12 +58,16 @@ public class MainActivity extends AppCompatActivity {
         final TextView mErrorView = (TextView) findViewById(R.id.txt_error);
         final TextView mStartAt = (TextView) findViewById(R.id.txt_startedat);
         final TextView mStartLabel = (TextView) findViewById(R.id.label_startat);
+        final TextView mEndAt = (TextView) findViewById(R.id.txt_endat);
+        final TextView mEndAtLabel = (TextView) findViewById(R.id.label_endat);
         final Button mClockIn = (Button) findViewById(R.id.button_clockin);
         final Button mClockOut = (Button) findViewById(R.id.button_clockout);
         final ProgressBar spinner = (ProgressBar) findViewById(R.id.spinner);
         mHeading.setVisibility(TextView.INVISIBLE);
         mStartLabel.setVisibility(TextView.INVISIBLE);
         mStartAt.setVisibility(TextView.INVISIBLE);
+        mEndAtLabel.setVisibility(TextView.INVISIBLE);
+        mEndAt.setVisibility(TextView.INVISIBLE);
         mErrorView.setVisibility(TextView.INVISIBLE);
         mClockIn.setVisibility(Button.INVISIBLE);
         mClockOut.setVisibility(Button.INVISIBLE);
@@ -90,11 +95,26 @@ public class MainActivity extends AppCompatActivity {
                             } catch (ParseException e) {
                                 mStartAt.setText(responseJSON.getString("StartAt"));
                             }
+                            mEndAt.setVisibility(TextView.INVISIBLE);
+                            mEndAtLabel.setVisibility(TextView.INVISIBLE);
                             mStartLabel.setVisibility(TextView.VISIBLE);
                             mStartAt.setVisibility(TextView.VISIBLE);
                         } else {
                             mHeading.setText(getString(R.string.label_clockedout));
                             mClockIn.setVisibility(Button.VISIBLE);
+                            if (startAt != null) {
+                                mStartAt.setText(humanDate.format(startAt));
+                                mStartLabel.setVisibility(TextView.VISIBLE);
+                                mStartAt.setVisibility(TextView.VISIBLE);
+                            } else {
+                                mStartLabel.setVisibility(TextView.INVISIBLE);
+                                mStartAt.setVisibility(TextView.INVISIBLE);
+                            }
+                            if (endAt != null) {
+                                mEndAtLabel.setVisibility(TextView.VISIBLE);
+                                mEndAt.setText(humanDate.format(endAt));
+                                mEndAt.setVisibility(TextView.VISIBLE);
+                            }
                         }
                     } catch (JSONException e) {
                         mHeading.setText(getString(R.string.label_error));
@@ -171,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                endAt = new Date();
                 checkStatus(findViewById(R.id.btn_refresh));
             }
         }, new Response.ErrorListener() {
