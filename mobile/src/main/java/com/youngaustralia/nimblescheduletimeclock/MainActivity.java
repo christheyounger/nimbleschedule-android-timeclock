@@ -21,6 +21,9 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     public static Boolean isActive;
     public static Date startAt;
     public static String authStr;
+    final DateFormat nimbleDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmz");
+    final DateFormat humanDate = DateFormat.getDateTimeInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +84,12 @@ public class MainActivity extends AppCompatActivity {
                         if (isActive) {
                             mHeading.setText(getString(R.string.label_clockedin));
                             mClockOut.setVisibility(Button.VISIBLE);
-                            mStartAt.setText(responseJSON.getString("StartAt"));
+                            try {
+                                startAt = nimbleDate.parse(responseJSON.getString("StartAt") + "+0000");
+                                mStartAt.setText(humanDate.format(startAt));
+                            } catch (ParseException e) {
+                                mStartAt.setText(responseJSON.getString("StartAt"));
+                            }
                             mStartLabel.setVisibility(TextView.VISIBLE);
                             mStartAt.setVisibility(TextView.VISIBLE);
                         } else {
