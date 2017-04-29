@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         final TextView mStartLabel = (TextView) findViewById(R.id.label_startat);
         final TextView mEndAt = (TextView) findViewById(R.id.txt_endat);
         final TextView mEndAtLabel = (TextView) findViewById(R.id.label_endat);
+        final TextView mDiff = (TextView) findViewById(R.id.txt_diff);
+        final TextView mDiffLabel = (TextView) findViewById(R.id.label_diff);
         final Button mClockIn = (Button) findViewById(R.id.button_clockin);
         final Button mClockOut = (Button) findViewById(R.id.button_clockout);
         final ProgressBar spinner = (ProgressBar) findViewById(R.id.spinner);
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         mStartAt.setVisibility(TextView.INVISIBLE);
         mEndAtLabel.setVisibility(TextView.INVISIBLE);
         mEndAt.setVisibility(TextView.INVISIBLE);
+        mDiffLabel.setVisibility(TextView.INVISIBLE);
+        mDiff.setVisibility(TextView.INVISIBLE);
         mErrorView.setVisibility(TextView.INVISIBLE);
         mClockIn.setVisibility(Button.INVISIBLE);
         mClockOut.setVisibility(Button.INVISIBLE);
@@ -114,6 +118,12 @@ public class MainActivity extends AppCompatActivity {
                                 mEndAtLabel.setVisibility(TextView.VISIBLE);
                                 mEndAt.setText(humanDate.format(endAt));
                                 mEndAt.setVisibility(TextView.VISIBLE);
+                            }
+                            if (endAt != null && startAt != null) {
+                                long diff = (endAt.getTime() - startAt.getTime()) / 1000;
+                                mDiff.setText(String.format("%02d:%02d:%02d", diff / 3600, (diff % 3600) / 60, (diff % 60)));
+                                mDiff.setVisibility(TextView.VISIBLE);
+                                mDiffLabel.setVisibility(TextView.VISIBLE);
                             }
                         }
                     } catch (JSONException e) {

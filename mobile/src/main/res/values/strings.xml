@@ -23,4 +23,5 @@
     <string name="label_clockedin">Clocked in</string>
     <string name="label_clockedout">Clocked out</string>
     <string name="label_endat">Finish time</string>
+    <string name="label_diff">Time logged</string>
 </resources>
